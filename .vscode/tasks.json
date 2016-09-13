@@ -1,0 +1,18 @@
+{
+    "version": "0.1.0",
+    "command": "gulp",
+    "isShellCommand": true,
+    "args": ["--no-color"],
+    "tasks": [
+        {
+            "taskName": "server",
+            "isBuildCommand": true,
+            "showOutput": "always"
+        },
+        {
+            "taskName": "karma",
+            "isTestCommand": true,
+            "showOutput": "always"
+        }
+    ]
+}

@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>5 days Weather Forecast</title>
+    <!-- added a random favicon from google to avoid a loading error in chrome browser -->
+    <link href="data:image/x-icon;base64,AAABAAEAEBAAAAAAAABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAApmCoAKpgqACqbKgAqnioAKqEqANrw2gAneScAKqQqACd8JwCCzYIALLIsACd/JwAstSwAKY0pACy4LAApkCkAKZMpACmWKQAqpCsASrNKACunKwArqisAKIIoACutKwAohSgAK7ArACiIKAAoiygASLpIACqZKgD+/v4AKpwqACqfKgAqoioAJ3onADiXOADi9OIAJ30nACyzLAAstiwAKY4pACy5LABhumEAKZEpALnjuQD6/foAKZQpAGWnZQAplykAK6UrACuoKwDZ7NkAKIAoACurKwAogygAK64rALrjugAohigAx+rHACiJKADX6tcAKpoqACqdKgAqoCoAJ3gnACqjKgAneycA/P38ACyxLAAnficALLQsACmMKQAstywAKY8pACy6LAApkikAK6ArACmVKQC337cAK6YrACupKwAogSgAK6wrACiEKAArrysAKIcoALXgtQAoiigAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEA8NGzs5UxY0RQhCIkBAQDAuK0lHV1UYNlELJQgiBkA9AE0QDygbOzlTFjRFJUIiAx8dMC4rSUdXGhg2UQslCCE/PgIATRAPKBs7OVMWNEVPBwQeHh4eHh4eHh4eLzZRFTIeHkw+AgFNEA8oPB45Uxc1HhMHBCAfHTAuKyMeVxpEVB4JMjFBPz4CAUMeHigbRgokHjhWHgcEIB8eMy5LSScMJjoeHh4yMUFOHgIBERAOSAxGChktHh4eHiogHx0wSikOJwwmRBwFLDIxQT8+AkpKSilIDEYKGTc1UBQSBCBKSkpKKQ4nDCZEVFIVMjFBSkpKSkpKKUgnRgoZNzVQFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=" rel="icon" type="image/x-icon" />
+    <link href="content/core.css" rel="stylesheet" />
+</head>
+<body>
+    <h1>5 days of Weather forecast</h1>
+    <div class="container">
+        
+        <!-- Display error message if there is one -->
+        <!-- ko if: Error() !== '' -->
+        <div class="badError" data-bind="text: Error"></div>
+        <!-- /ko --> 
+
+        <!-- Load weather-template -->
+        <div class="template" data-bind="template:{name:'weather-template'}"></div>
+
+    </div>
+    <footer>
+        <div>
+            Created by Young. <a href="mailto:n2name@hotmail.com?subject=About%205%20Days%20of%20forcast">Contact Young Today!</a>
+        </div>
+    </footer>
+
+    <!-- template block -->
+    <script type="text/html" id="weather-template">
+        <div data-bind="if: DataModel().forecastData.length != 0"> <!-- make sure data exist -->
+            <div class="lastUpdated">
+                <div class="left" data-bind="text:  DataModel().latitude + ' / ' + DataModel().longitude"></div> <!-- coordinates... (i guess i am lazy enough not to connect Google Api) -->
+                <div class="right" data-bind="text: 'Last updated ' + new Date(DataModel().lastUpdated).toString()"></div> <!-- timestamp : last data update from Dark Sky Api -->
+            </div>
+            <div class="scrolldown"></div>
+            <ul data-bind="foreach: DataModel().forecastData"> <!-- iterate 5 days of forecasts object -->
+                <li>
+                    <div class="popTop">
+                        <h3 data-bind="text: temperatureMax + 'F'"></h3>  <!-- maximum temp -->
+                    </div>
+                    <div class="popBottom">
+                        <h3 data-bind="text: temperatureMin + 'F'"></h3>  <!-- minimum temp -->
+                    </div>
+                    <div class="right">
+                        <canvas data-bind="skyIcon" width="60" height="60"></canvas>
+                    </div>
+                    <div class="left">
+                        <h2 data-bind="text: $root.GetDateFormat(time)"></h2> <!-- call ViewModel's function to get formated date -->
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </script>
+
+    <!-- load scripts... (can be bundled) -->
+    <script src="scripts/external/knockout-3.4.0.js"></script>
+    <script src="scripts/external/skycons.js"></script>
+    <script src="scripts/internal/common.js"></script>
+    <script src="scripts/internal/koHandlers.js"></script>
+    <script src="scripts/external/JSONP.js"></script>
+    <script src="scripts/internal/vms/FiveDaysWeatherViewModel.js"></script>
+
+    <!-- trigger binding -->
+    <script>
+        var darkSkyApiKey = '6fb45e06e99deff329ab0ec7cdefa082';
+        var viewModel = new W5D.VM.FiveDaysWeatherViewModel(darkSkyApiKey); // create an instance from the viewmodel with the Api Key
+        ko.applyBindings(viewModel); // bind!
+        W5D.skycons.play(); // play skycon animation
+    </script>
+</body>
+</html>
