@@ -54,7 +54,8 @@ W5D.VM.FiveDaysWeatherViewModel = function (apiKey) {
             // call Dark Sky api
             JSONP(url, function (json) {
                 dataModel.forecastData = json.daily.data.slice(0, 5); // get only 5 days of forecasts
-                self.SaveCacheData(self.DataModel()); // also save data into the local storage
+                self.SaveCacheData(dataModel); // also save data into the local storage
+                self.DataModel(dataModel); // refresh the data!
                 self.Error(""); // clear error message
             });
         } else {
@@ -67,7 +68,7 @@ W5D.VM.FiveDaysWeatherViewModel = function (apiKey) {
         var diifferentLocation = dataModel.longitude !== position.coords.longitude || dataModel.latitude !== position.coords.latitude;
         var timeToUpdate = (Date.now() - dataModel.lastUpdated) > 60 * 60 * 1000; // true if the last data updated more than one hour ago
 
-        return diifferentLocation && timeToUpdate;
+        return diifferentLocation || timeToUpdate;
     }
 
     // function that save data into the local storage
