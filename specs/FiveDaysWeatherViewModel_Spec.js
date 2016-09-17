@@ -41,7 +41,7 @@ describe("FiveDaysWeatherViewModel Class", function() {
 	    it("should return false when updated less than an hour ago", function () {
 	        // arrange
 	        var model = new W5D.VM.FiveDaysWeatherViewModel();
-	        var positionMock = { coords: { latitude: 42, longitude: 121 } };
+	        var positionMock = { coords: { latitude: 1, longitude: 1 } };
 	        var dataModel = {
 	            latitude: 1,
 	            longitude: 1,
